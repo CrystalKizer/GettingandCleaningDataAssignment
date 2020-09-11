@@ -7,6 +7,8 @@ fileUrl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%2
 download.file(fileUrl,destfile="./data/Dataset.zip") #Download file
 unzip(zipfile="./data/Dataset.zip",exdir="./data")  #unzip file
 
+# Reading features and assign column names
+features <- read.table("./data/UCI HAR Dataset/features.txt", col.names = c("n","functions"))
 # Reading training tables and assign column names
   x_train <- read.table("./data/UCI HAR Dataset/train/X_train.txt", col.names = features$functions)  
   y_train <- read.table("./data/UCI HAR Dataset/train/y_train.txt",col.names = "ActivityNumber")
@@ -16,9 +18,6 @@ unzip(zipfile="./data/Dataset.zip",exdir="./data")  #unzip file
   x_test <- read.table("./data/UCI HAR Dataset/test/X_test.txt", col.names = features$functions)
   y_test <- read.table("./data/UCI HAR Dataset/test/y_test.txt", col.names = "ActivityNumber")
   subject_test <- read.table("./data/UCI HAR Dataset/test/subject_test.txt", col.names = "Subject")
-
-# Reading features and assign column names
-  features <- read.table("./data/UCI HAR Dataset/features.txt", col.names = c("n","functions"))
 
 # Reading activity labels and assign column names
   activityLabels = read.table("./data/UCI HAR Dataset/activity_labels.txt", col.names = c("ActivityNumber", "ActivityType"))
@@ -35,32 +34,34 @@ unzip(zipfile="./data/Dataset.zip",exdir="./data")  #unzip file
 
 #Step2: 2.Extracts only the measurements on the mean and standard deviation for each measurement. 
   # selects data from combined data set with only mean and std devcolumns
-  mean_and_std  <- Merge_all_data %>% select(Subject, ActivityNumber, contains("mean"), contains("std"))  
 
+    ONLYmean_and_std<- grep("mean|std|ActivityNumber|Subject", names(Merge_all_data))
+  
+    SelectedData<- Merge_all_data[, ONLYmean_and_std]  
 
 # Step 3: 3.Uses descriptive activity names to name the activities in the data set
   # replaces activity number with the activity name from acitivitylabels to make more descriptive name
-  mean_and_std$ActivityNumber <-activityLabels[mean_and_std$ActivityNumber, 2] 
+    SelectedData$ActivityNumber <-activityLabels[SelectedData$ActivityNumber, 2] 
 
 
 
 
 #step4: 4.Appropriately labels the data set with descriptive variable names. 
-  names(mean_and_std)<-gsub("Acc", "Accelerometer", names(mean_and_std))  # takes columns with Acc in and renames to Acceleromater
-  names(mean_and_std)<-gsub("Gyro", "Gyroscope", names(mean_and_std))   # takes columns with gyrp in and renames to Gyroscope
-  names(mean_and_std)<-gsub("BodyBody", "Body", names(mean_and_std))   # takes columns with body repeated and cleans it to body
-  names(mean_and_std)<-gsub("Mag", "Magnitude", names(mean_and_std))    # takes columns with mag in and renames to Magnitude
-  names(mean_and_std)<-gsub("^t", "Time", names(mean_and_std))     # takes columns with ^t in and renames to Time
-  names(mean_and_std)<-gsub("^f", "Frequency", names(mean_and_std))   # takes columns with ^f in and renames to Frequency
-  names(mean_and_std)<-gsub("mean", "Mean", names(mean_and_std), ignore.case = TRUE) # renames Mean
-  names(mean_and_std)<-gsub("std", "STD_DEVIATION", names(mean_and_std), ignore.case = TRUE) # names std to STD_DEVIATION
-  names(mean_and_std)<-gsub("-freq()", "Frequency", names(mean_and_std), ignore.case = TRUE) # renames freq to Frequency
-  names(mean_and_std)<-gsub("angle", "Angle", names(mean_and_std)) #renames/capitalizes angle
-  names(mean_and_std)<-gsub("gravity", "Gravity", names(mean_and_std))   #renames/capitalizes gravity
+  names(SelectedData)<-gsub("Acc", "Accelerometer", names(SelectedData))  # takes columns with Acc in and renames to Acceleromater
+  names(SelectedData)<-gsub("Gyro", "Gyroscope", names(SelectedData))   # takes columns with gyrp in and renames to Gyroscope
+  names(SelectedData)<-gsub("BodyBody", "Body", names(SelectedData))   # takes columns with body repeated and cleans it to body
+  names(SelectedData)<-gsub("Mag", "Magnitude", names(SelectedData))    # takes columns with mag in and renames to Magnitude
+  names(SelectedData)<-gsub("^t", "Time", names(SelectedData))     # takes columns with ^t in and renames to Time
+  names(SelectedData)<-gsub("^f", "Frequency", names(SelectedData))   # takes columns with ^f in and renames to Frequency
+  names(SelectedData)<-gsub("mean", "Mean", names(SelectedData), ignore.case = TRUE) # renames Mean
+  names(SelectedData)<-gsub("std", "STD_DEVIATION", names(SelectedData), ignore.case = TRUE) # names std to STD_DEVIATION
+  names(SelectedData)<-gsub("-freq()", "Frequency", names(SelectedData), ignore.case = TRUE) # renames freq to Frequency
+  names(SelectedData)<-gsub("angle", "Angle", names(SelectedData)) #renames/capitalizes angle
+  names(SelectedData)<-gsub("gravity", "Gravity", names(SelectedData))   #renames/capitalizes gravity
 
 #5.From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 # creates the final independent tidy data with the average for each subject and activity
-  TidyData<-mean_and_std %>%
+  TidyData<-SelectedData %>%
     group_by(Subject, ActivityNumber) %>%
     summarize_all(list(mean))
 
