@@ -1,9 +1,9 @@
-#CodeBook for Getting and Cleaning Data Assignment
+##CodeBook for Getting and Cleaning Data Assignment
 
 The final  tidy dataset "tidydata.txt" that contains the average of each variable for each activity and each subject from the Human Activity Recognition Using Smartphones Data Set
 
 
-Description
+###Description
 
 Data in dataset contains 180 rows and 81 columns for
 
@@ -11,18 +11,18 @@ Data in dataset contains 180 rows and 81 columns for
 
 •std(): Standard deviation
 
-Identifiers
+###Identifiers
 
-The  data is grouped by the following values to show the mean value and the standard deviation std()
+#The  data is grouped by the following values to show the mean value and the standard deviation std()
 
 •subject - The ID number of the subject
 
 •activitynumber - The type of activity performed when the corresponding measurements were taken
 
 
-Activity
+###Activity
 
-The subject within the data set are numbered  from 1 to 30. Activitnumber column has 6 types as listed below.
+#The subject within the data set are numbered  from 1 to 30. Activitnumber column has 6 types as listed below.
 
 1.WALKING
 
@@ -37,7 +37,7 @@ The subject within the data set are numbered  from 1 to 30. Activitnumber column
 6.LAYING
 
 
-Measurements
+###Measurements
 
 TimeBodyAccelerometer.Mean...X 
 TimeBodyAccelerometer.Mean...Y 
